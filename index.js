@@ -26,10 +26,32 @@ async function run() {
             res.send(result);
         });
 
+        // Data Load by Id
         app.get('/details/:id', async(req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await detailsCollection.find(query).toArray();
+            res.send(result);
+        });
+
+        // Delete Detail
+        app.delete('/details/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await detailsCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        // Set Users on Database
+        app.put('/detail/:id', async (req, res) => {
+            const id = req.params.id;
+            const user = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: user,
+            };
+            const result = await detailsCollection.updateOne(filter, updatedDoc, options);
             res.send(result);
         });
         
